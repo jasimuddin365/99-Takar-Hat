@@ -1,0 +1,183 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  passwordHash String
+  name         String
+  phone        String?
+  city         String?
+  address      String?
+  role         UserRole       @default(CUSTOMER)
+  isActive     Boolean        @default(true)
+  joinedAt     DateTime       @default(now())
+  avatar       String?
+  cartItems    CartItem[]
+  orders       Order[]
+  reviews      Review[]
+  stall        Stall?
+  wishlist     WishlistItem[]
+
+  @@map("users")
+}
+
+model Stall {
+  id          String    @id @default(cuid())
+  ownerId     String?   @unique
+  name        String
+  slug        String    @unique
+  emoji       String
+  description String?
+  location    String
+  ownerName   String
+  rating      Float     @default(4.5)
+  totalSales  Int       @default(0)
+  since       String
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  products    Product[]
+  owner       User?     @relation(fields: [ownerId], references: [id])
+
+  @@map("stalls")
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  slug      String    @unique
+  name      String
+  icon      String
+  position  Int       @default(0)
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  products  Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id          String         @id @default(cuid())
+  name        String
+  description String
+  price       Int            @default(99)
+  stock       Int            @default(0)
+  sales       Int            @default(0)
+  rating      Float          @default(4.5)
+  badge       String?
+  discount    Int            @default(0)
+  imageUrl    String?
+  isActive    Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  stallId     String
+  categoryId  String
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+  category    Category       @relation(fields: [categoryId], references: [id])
+  stall       Stall          @relation(fields: [stallId], references: [id], onDelete: Cascade)
+  reviews     Review[]
+  wishlist    WishlistItem[]
+
+  @@index([stallId])
+  @@index([categoryId])
+  @@map("products")
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  qty       Int      @default(1)
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("cart_items")
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("wishlist_items")
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  userId          String
+  status          OrderStatus @default(PROCESSING)
+  totalQty        Int
+  subtotal        Int
+  delivery        Int
+  discount        Int
+  total           Int
+  note            String?
+  paymentMethod   String?
+  customerName    String
+  customerPhone   String?
+  customerAddress String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String
+  productId   String
+  productName String
+  productIcon String?
+  vendorName  String
+  unitPrice   Int
+  qty         Int
+  lineTotal   Int
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  stars     Int      @default(5)
+  text      String
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("reviews")
+}
+
+enum UserRole {
+  CUSTOMER
+  VENDOR
+  ADMIN
+}
+
+enum OrderStatus {
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}

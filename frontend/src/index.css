@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-bazaar-bg text-bazaar-ink font-sans text-[14px] leading-relaxed antialiased;
+  }
+  a {
+    @apply text-inherit no-underline;
+  }
+  button {
+    @apply font-sans cursor-pointer outline-none;
+  }
+  input,
+  select,
+  textarea {
+    @apply font-sans outline-none;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center gap-2 px-[18px] py-[9px] rounded font-semibold text-[13.5px] transition-colors border-[1.5px] border-transparent;
+  }
+  .btn-primary {
+    @apply bg-bazaar-gold text-bazaar-ink border-bazaar-gold hover:bg-[#B07D14] hover:border-[#B07D14];
+  }
+  .btn-secondary {
+    @apply bg-white text-bazaar-ink border-bazaar-border hover:bg-bazaar-bg hover:border-bazaar-border2;
+  }
+  .btn-danger {
+    @apply bg-bazaar-red text-white border-bazaar-red;
+  }
+  .btn-success {
+    @apply bg-bazaar-green text-white border-bazaar-green;
+  }
+  .btn-sm {
+    @apply px-3 py-1.5 text-[12px];
+  }
+  .btn-xs {
+    @apply px-[9px] py-1 text-[11px] rounded-[5px];
+  }
+  .card {
+    @apply bg-white border border-bazaar-border rounded-lg shadow-soft;
+  }
+  .form-input {
+    @apply w-full px-[13px] py-[9px] border-[1.5px] border-bazaar-border rounded text-[13.5px] bg-white focus:border-bazaar-gold transition-colors;
+  }
+  .form-select {
+    @apply w-full px-[13px] py-[9px] border-[1.5px] border-bazaar-border rounded text-[13.5px] bg-white cursor-pointer;
+  }
+  .form-textarea {
+    @apply w-full px-[13px] py-[9px] border-[1.5px] border-bazaar-border rounded text-[13.5px] bg-white resize-y min-h-[80px];
+  }
+  .form-label {
+    @apply block text-[12px] font-semibold text-bazaar-ink2 mb-[5px] tracking-[0.2px];
+  }
+  .role-chip {
+    @apply text-[11px] px-[10px] py-1 rounded-full font-semibold tracking-[0.4px] uppercase;
+  }
+  .role-chip-customer {
+    @apply bg-bazaar-green-l text-bazaar-green;
+  }
+  .role-chip-vendor {
+    @apply bg-bazaar-blue-l text-bazaar-blue;
+  }
+  .role-chip-admin {
+    @apply bg-bazaar-purple-l text-bazaar-purple;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 px-[9px] py-[3px] rounded-full text-[11px] font-semibold;
+  }
+  .chip-green {
+    @apply bg-bazaar-green-l text-bazaar-green;
+  }
+  .chip-red {
+    @apply bg-bazaar-red-l text-bazaar-red;
+  }
+  .chip-gold {
+    @apply bg-bazaar-gold-l text-bazaar-gold;
+  }
+  .chip-blue {
+    @apply bg-bazaar-blue-l text-bazaar-blue;
+  }
+  .chip-orange {
+    @apply bg-bazaar-orange-l text-bazaar-orange;
+  }
+  .chip-gray {
+    @apply bg-bazaar-bg2 text-bazaar-ink3;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
